@@ -1,0 +1,14 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# Command to build the service binaries
+cmd = "go build -gcflags='all=-N -l' -o ./tmp/go-solid-design main.go"
+# Binary file yields from `cmd`.
+bin = "tmp/main"
+# Customize binary.
+full_bin = "pkill -9 'dlv|go-solid-design'; sleep 0.1; dlv exec --accept-multiclient --log --headless --continue --listen :2345 --api-version 2 ./tmp/go-solid-design"
+# Watch these filename extensions.
+include_ext = ["go", "tpl", "tmpl", "html"]
+# Exclude watching these directories
+exclude_dir = ["build", ".devcontainer", "scripts"]
