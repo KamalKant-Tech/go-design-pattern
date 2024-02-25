@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  solid-design-principle:
+    container_name: solid-design-principle
+    build:
+      context: .
+      dockerfile: build/Dockerfile
+      target: devcontainer
+      args:
+        - EVT_GITHUB_TOKEN
+        - EVT_GITHUB_NAME
+        - EVT_GITHUB_EMAIL
+    ports:
+      - "8080:80"
+      - "2345:2345"
+    environment:
+      # - SECRET_NAME=dev/gov/layer_management_service_rw
+      # # This will flag the service and the AWS SDK to use the credentials file to
+      # # initialize a session.
+      # - AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials
+      # - DEV_CENTER_SECRET_NAME=dev/devcenter/creds
+    volumes:
+      - ./:/workspace:cached
+      - ./:/app:rw,delegated
+      # Grab the users AWS creds to connect to deployed DB
+      - $HOME/.aws:/.aws:ro
+    command: /bin/sh -c "air"
+
+  # postgres:
+  #   image: postgres:12-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_DB=db_test
+  #   volumes: 
+  #     - postgres:/var/lib/postgresql/data
+  #     # Copy the local sql script to create test tables
+  #     - ./.devcontainer/sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+volumes:
+  postgres:
